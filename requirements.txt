@@ -1,4 +1,6 @@
+streamlit 
 matplotlib
 # pandas
 # ipykernel? 
 seaborn
+scikit-learn

@@ -1,6 +1,5 @@
 import pandas as pd
 
-def print_data_head(file_path):
-    data = pd.read_csv(file_path)
+def print_data_head(data: pd.DataFrame) -> None:
     print(data.head())
     return 
