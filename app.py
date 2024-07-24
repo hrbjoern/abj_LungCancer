@@ -1,9 +1,21 @@
 import streamlit as st
+import numpy as np
+import joblib #it most go to the requirements.txt
+import pandas as pd
+
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+
+from sklearn.ensemble import RandomForestClassifier
+
+
+my_pipeline = joblib.load('data/pipeline_model.pkl')
 
 st.header('Are you at stroke risk?')
 
 #important to remember and act fast
-st.image('https://comprehensiveprimarycare.com/wp-content/uploads/2022/03/stroke-symptoms-1024x866.jpg')
+st.image('image/stroke-symptoms.jpg')
 
 st.write("Taking a questionnaire to assess your stroke risk is a proactive step towards understanding and managing your health.")
 
@@ -22,30 +34,52 @@ weight = st.number_input("Weight [kg]:", min_value=0.0, step=0.1)
 # Calculate BMI
 if height > 0 and weight > 0:
     bmi = weight / (height ** 2)
-    st.markdown(f"<h3>Your BMI is: {bmi:.2f}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h4>Your BMI is: {bmi:.2f}</h4>", unsafe_allow_html=True)
 
 #Heart disease history
 heart_disease = st.radio("Ever had a heart disease:",
-    ["No", "Yes"], index = None)
+    ["0", "1"], index = None)
+
+#Hypertension
+hypertension = st.radio("Do you have hypertension:",
+    ["0", "1"], index = None)
 
 #Married
-married = st.radio("Ever married:",
-    ["Married", "Not married"], index = None)
+ever_married = st.radio("Ever married:",
+    ["Yes", "No"], index = None)
 
 #Smoking status
-smoking = st.radio("Smoking history:",
-    ["Never smoked", "Formerly smoked", "Smokes"], index = None)
-
-#average Glucose level
-#glucose_level = st.number_input("Average glucose level (100-200):", step=20)
+smoking_status = st.radio("Smoking history:",
+    ["never smoked", "formerly smoked", "smokes"], index = None)
 
 #Residence type
-residence_type = st.radio("Residence type:",
+Residence_type = st.radio("Residence type:",
     ["Urban", "Rural"], index = None)
 
 #Work type
 work_type = st.radio("Work type:",
     ["Private", "Self-employed"], index = None)
 
-#Questionare end, evaluation button
-st.button("Evaluate")
+
+# When the user clicks the 'Predict' button
+if st.button("Predict"):
+    # Create an array of inputs for prediction
+    input_data = np.array([[gender, age, hypertension, heart_disease, ever_married, work_type, Residence_type, bmi, smoking_status]])
+    # Define the column names for the DataFrame
+    column_names = ['gender', 'age', 'hypertension', 'heart_disease', 'ever_married', 'work_type', 'Residence_type', 'bmi', 'smoking_status']
+    # Convert the NumPy array to a pandas DataFrame
+    df = pd.DataFrame(data=input_data, columns=column_names)
+
+
+    # Make a prediction using the model
+    prediction = my_pipeline.predict(df)
+    
+    # Display the prediction
+    st.write(f"Prediction: {prediction[0]}")
+
+
+
+    #if prediction=yes
+        #st.write("Taking a questionnaire to assess your stroke risk is a proactive step towards understanding and managing your health.")
+    #elif
+        #st.write("You are NOT at stroke risk")
