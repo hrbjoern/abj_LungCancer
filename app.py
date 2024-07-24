@@ -38,19 +38,19 @@ if height > 0 and weight > 0:
 
 #Heart disease history
 heart_disease = st.radio("Ever had a heart disease:",
-    ["No", "Yes"], index = None)
+    ["0", "1"], index = None)
 
 #Hypertension
 hypertension = st.radio("Do you have hypertension:",
-    ["No", "Yes"], index = None)
+    ["0", "1"], index = None)
 
 #Married
 ever_married = st.radio("Ever married:",
-    ["Married", "Not married"], index = None)
+    ["Yes", "No"], index = None)
 
 #Smoking status
 smoking_status = st.radio("Smoking history:",
-    ["Never smoked", "Formerly smoked", "Smokes"], index = None)
+    ["never smoked", "formerly smoked", "smokes"], index = None)
 
 #Residence type
 Residence_type = st.radio("Residence type:",
@@ -72,7 +72,7 @@ if st.button("Predict"):
 
 
     # Make a prediction using the model
-    prediction = my_pipeline.predict(input_data)
+    prediction = my_pipeline.predict(df)
     
     # Display the prediction
     st.write(f"Prediction: {prediction[0]}")
